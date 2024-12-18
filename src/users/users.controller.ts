@@ -8,21 +8,33 @@ import {
   Post,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
-@Controller('users')
+@Controller('')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('/create')
+  @Post('/register')
   create(
     @Body(ValidationPipe)
     createUserDto: CreateUserDto,
   ) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Get('/verify-email')
+  async verifyEmail(@Query('token') token: string): Promise<string> {
+    return this.usersService.verifyEmail(token);
+  }
+
+  @Post('/login')
+  loginUser(@Body(ValidationPipe) loginUserDto: LoginUserDto) {
+    return this.usersService.login(loginUserDto);
   }
 
   @Get('/all-users')
